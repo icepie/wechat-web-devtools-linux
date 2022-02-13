@@ -12,7 +12,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 NW_VERSION=$1
 package_dir="$DIR/../package.nw"
 
-export PATH="$DIR/../node/bin:$PATH"
+export PATH="$DIR/../nodejs/bin:$PATH"
 PY_VERSION=`python -V 2>&1|awk '{print $2}'|awk -F '.' '{print $1}'`
 if [ $PY_VERSION != 2 ]; then
   hash python2 2>/dev/null || { echo >&2 "I require python2 but it's not installed.  Aborting."; exit 1; }
@@ -77,13 +77,13 @@ rm -fr "${package_dir}/node_modules_tmp/node_modules/spdlog-node"
     --nodegit_binary_host_mirror=https://npm.taobao.org/mirrors/nodegit/v0.27.0/) # reinstall modules
 
 # rebuild
-cd "$package_dir/node_modules_tmp/node_modules/node-pty" && nw-gyp rebuild --arch=x64 "--target=$NW_VERSION"
+cd "$package_dir/node_modules_tmp/node_modules/node-pty" && nw-gyp rebuild --arch=x64 "--target=$NW_VERSION" --dist-url=https://registry.npmmirror.com/-/binary/nwjs
 (cp -fr "${package_dir}/node_modules_tmp/node_modules/node-pty" "${package_dir}/node_modules_tmp/node_modules/node-pty-node")
 rm -rf "${package_dir}/node_modules/node-pty" "${package_dir}/node_modules/node-pty-node"
 cp -fr "${package_dir}/node_modules_tmp/node_modules/node-pty" "${package_dir}/node_modules"
 (cp -fr "${package_dir}/node_modules/node-pty" "${package_dir}/node_modules/node-pty-node")
 
-cd "$package_dir/node_modules_tmp/node_modules/native-watchdog" && nw-gyp rebuild --arch=x64 "--target=$NW_VERSION"
+cd "$package_dir/node_modules_tmp/node_modules/native-watchdog" && nw-gyp rebuild --arch=x64 "--target=$NW_VERSION" --dist-url=https://registry.npmmirror.com/-/binary/nwjs
 rm -rf "${package_dir}/node_modules/native-watchdog" && cp -fr "${package_dir}/node_modules_tmp/node_modules/native-watchdog" "${package_dir}/node_modules"
 
 cd "${package_dir}/node_modules_tmp/node_modules/nodegit" && rm -rf .github include src lifecycleScripts vendor utils build/vendor build/Release/.deps
